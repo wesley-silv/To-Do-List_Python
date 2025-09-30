@@ -28,7 +28,7 @@ class Task:
         conn = create_connection()
         cursor = conn.execute("SELECT * FROM tasks ORDER BY created_at DESC")
         rows = cursor.fetchall()
-        conn.close()  # Aqui NÃO usamos 'with', então fechamos manualmente
+        conn.close()  # Here we not using 'with', so closed manually 
         return [Task(**dict(row)) for row in rows]
 
     @staticmethod

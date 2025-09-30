@@ -1,4 +1,3 @@
-# main.py
 from models import Task
 from database import init_db
 

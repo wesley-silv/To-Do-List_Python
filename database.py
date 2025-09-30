@@ -11,7 +11,7 @@ def create_connection():
     return connection
 
 def init_db():
-    """Cria a tabela tasks se não existir."""
+    """Creates a tasks table if not existr."""
     connection = create_connection()
     with connection:  # The 'with' managemnt the close automaticaly
         connection.execute("""
