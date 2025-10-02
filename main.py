@@ -20,7 +20,8 @@ def main():
         print("2. Listar tarefas")
         print("3. Marcar como concluída")
         print("4. Atualizar tarefa")
-        print("5. Deletar tarefa")
+        print("5. Deletar tarefa concluída")
+        print("6. Deletar todas as tarefas")
         print("0. Sair")
         choice = input("Escolha uma opção: ")
 
@@ -61,8 +62,16 @@ def main():
         elif choice == "5":
             try:
                 task_id = int(input("ID da tarefa: "))
-                Task.delete(task_id)
-                print("🗑️ Tarefa deletada!")
+                Task.delete_tarefa_concluida(task_id)
+                print("🗑️ Tarefa concluida deletada!")
+            except ValueError:
+                print("❌ ID inválido.")
+                
+        elif choice == "6":
+            try:
+                task_id = int(input("ID da tarefa: "))
+                Task.delete_all_tasks()
+                print("🗑️ Tarefas deletads!")
             except ValueError:
                 print("❌ ID inválido.")
 

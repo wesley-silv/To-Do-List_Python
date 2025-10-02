@@ -1,8 +1,8 @@
 from database import create_connection
 
 # Function for applying test
-def _get_connection():
-    return create_connection()
+# def _get_connection():
+#     return create_connection()
 
 class Task:
     def __init__(self, id=None, title="", description="", done=False, created_at=None):
@@ -11,7 +11,7 @@ class Task:
         self.description = description
         self.done = bool(done)  # Ensure the return of boolean value
         self.created_at = created_at
-
+        
     @staticmethod # Decorator
     def create(title: str, description: str = ""):
         """Cria uma nova tarefa."""
@@ -50,14 +50,14 @@ class Task:
         params = []
 
         if title is not None:
-            updates.append("title = ?")
+            updates.append("title = ?") 
             params.append(title)
         if description is not None:
             updates.append("description = ?")
             params.append(description)
         if done is not None:
             updates.append("done = ?")
-            params.append(int(done))  # SQLite usa 0/1 para boolean
+            params.append(int(done))  # SQLite use 0/1 for represent a boolean
 
         if not updates:
             conn.close()
@@ -67,14 +67,21 @@ class Task:
         query = f"UPDATE tasks SET {', '.join(updates)} WHERE id = ?"
         with conn:
             conn.execute(query, params)
-        # 'with' já fechou
         return True
 
     @staticmethod
-    def delete(task_id: int):
-        """Deleta uma tarefa pelo ID."""
+    def delete_tarefa_concluida(task_id: int):
+        """Deleta uma tarefa pelo ID apenas se ela estiver concluída."""
         conn = create_connection()
         with conn:
-            conn.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+            conn.execute("DELETE FROM tasks WHERE id = ? AND done = True", (task_id,))
         return True
     
+    @staticmethod
+    def delete_all_tasks():
+        """Deleta todas as tarefas."""
+        conn = create_connection()
+        with conn:
+            conn.execute("DELETE FROM tasks")
+            conn.execute("DELETE FROM sqlite_sequence WHERE name='tasks'") # Reset the id autoincrement value
+        return True
