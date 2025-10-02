@@ -15,7 +15,7 @@ def print_tasks(tasks):
 def main():
     init_db()
     while True:
-        print("\n=== To-Do List ===")
+        print("\n===== App To-Do List =====")
         print("1. Adicionar tarefa")
         print("2. Listar tarefas")
         print("3. Marcar como concluída")
@@ -67,7 +67,7 @@ def main():
                 print("❌ ID inválido.")
 
         elif choice == "0":
-            print("Saindo...")
+            print("Programa finalizado.")
             break
 
         else:

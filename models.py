@@ -1,15 +1,18 @@
-# models.py
 from database import create_connection
+
+# Function for applying test
+def _get_connection():
+    return create_connection()
 
 class Task:
     def __init__(self, id=None, title="", description="", done=False, created_at=None):
         self.id = id
         self.title = title
         self.description = description
-        self.done = bool(done)  # Garante que seja booleano
+        self.done = bool(done)  # Ensure the return of boolean value
         self.created_at = created_at
 
-    @staticmethod
+    @staticmethod # Decorator
     def create(title: str, description: str = ""):
         """Cria uma nova tarefa."""
         conn = create_connection()
@@ -19,7 +22,6 @@ class Task:
                 (title, description)
             )
             task_id = cursor.lastrowid
-        # Não feche manualmente — 'with' já fechou
         return task_id
 
     @staticmethod
@@ -27,7 +29,7 @@ class Task:
         """Retorna todas as tarefas."""
         conn = create_connection()
         cursor = conn.execute("SELECT * FROM tasks ORDER BY created_at DESC")
-        rows = cursor.fetchall()
+        rows = cursor.fetchall() # fetchall retrun the list of all lines
         conn.close()  # Here we not using 'with', so closed manually 
         return [Task(**dict(row)) for row in rows]
 
@@ -75,3 +77,4 @@ class Task:
         with conn:
             conn.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
         return True
+    

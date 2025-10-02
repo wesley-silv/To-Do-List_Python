@@ -1,8 +1,16 @@
 import sqlite3
 from pathlib import Path
+from typing import Union
 
-DB_PATH = Path("todo.db") # Const declaration with the path of database
 
+# Implementation of tests
+DB_PATH: Union[str, Path] = "todo.bd" # Const declaration with the path of database
+
+
+def set_db_path(path: Union[str, Path]):
+    """Permite mudar o caminho do banco (útil para testes)."""
+    global DB_PATH
+    DB_PATH = path
 
 def create_connection():
     """Creates and return a connction with databases."""
