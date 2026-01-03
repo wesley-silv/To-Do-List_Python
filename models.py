@@ -1,4 +1,5 @@
 from database import create_connection
+from datetime import datetime, timezone
 
 # Function for applying test
 # def _get_connection():
@@ -10,16 +11,21 @@ class Task:
         self.title = title
         self.description = description
         self.done = bool(done)  # Ensure the return of boolean value
-        self.created_at = created_at
+        if isinstance(created_at, str):
+            naive_dt = datetime.fromisoformat(created_at)
+            self.created_at = naive_dt.replace(tzinfo=timezone.utc)
+        else:
+            self.created_at = created_at
         
     @staticmethod # Decorator
     def create(title: str, description: str = ""):
-        """Cria uma nova tarefa."""
+        """Create a new task with created_at em UTC in ISO format."""
+        created_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
         conn = create_connection()
         with conn:
             cursor = conn.execute(
-                "INSERT INTO tasks (title, description) VALUES (?, ?)",
-                (title, description)
+                "INSERT INTO tasks (title, description, created_at) VALUES (?, ?, ?)",
+                (title, description, created_at)
             )
             task_id = cursor.lastrowid
         return task_id
@@ -28,10 +34,12 @@ class Task:
     def get_all():
         """Retorna todas as tarefas."""
         conn = create_connection()
-        cursor = conn.execute("SELECT * FROM tasks ORDER BY created_at DESC")
-        rows = cursor.fetchall() # fetchall retrun the list of all lines
-        conn.close()  # Here we not using 'with', so closed manually 
-        return [Task(**dict(row)) for row in rows]
+        try:
+            cursor = conn.execute("SELECT * FROM tasks ORDER BY created_at DESC")
+            rows = cursor.fetchall() # fetchall retrun the list of all lines
+            return [Task(**dict(row)) for row in rows]
+        finally:
+            conn.close()  # Here we not using 'with', so closed manually 
 
     @staticmethod
     def get_by_id(task_id: int):
@@ -85,3 +93,4 @@ class Task:
             conn.execute("DELETE FROM tasks")
             conn.execute("DELETE FROM sqlite_sequence WHERE name='tasks'") # Reset the id autoincrement value
         return True
+    

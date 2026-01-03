@@ -5,12 +5,12 @@ def print_tasks(tasks):
     if not tasks:
         print("Nenhuma tarefa encontrada.")
         return
-    for t in tasks:
-        status = "✅" if t.done else "⏳"
-        print(f"[{t.id}] {status} {t.title}")
-        if t.description:
-            print(f"    Descrição: {t.description}")
-        print(f"    Criada em: {t.created_at}\n")
+    for task in tasks:
+        status = "✅" if task.done else "⏳"
+        print(f"{task.id}° {status} {task.title}")
+        if task.description:
+            print(f"    Descrição: {task.description}")
+        print(f"    Criada em: {task.created_at}\n")
 
 def main():
     init_db()
